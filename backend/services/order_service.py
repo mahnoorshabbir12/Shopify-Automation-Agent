@@ -3,6 +3,7 @@ from sqlalchemy.dialects.postgresql import insert
 import logging
 from backend.models.order import Customer, Order
 from backend.schemas.shopify import ShopifyOrder
+from backend.services.workflow.tasks import ATTEMPT_CONFIRMATION_CALL, enqueue_workflow_task
 
 logger = logging.getLogger(__name__)
 
@@ -42,13 +43,23 @@ async def ingest_shopify_order(db: AsyncSession, shopify_order: ShopifyOrder):
     # On conflict (duplicate order ID), do nothing. This makes our webhook perfectly idempotent.
     stmt_order = stmt_order.on_conflict_do_nothing(index_elements=['id'])
     result = await db.execute(stmt_order)
+
+    created = result.rowcount > 0
+    if created:
+        await enqueue_workflow_task(
+            db,
+            order_id=order_id,
+            task_type=ATTEMPT_CONFIRMATION_CALL,
+            idempotency_key=f"order:{order_id}:confirmation-attempt:1",
+            attempt_number=1,
+        )
     
     await db.commit()
     
     # Log if it was actually inserted or skipped
-    if result.rowcount > 0:
-        logger.info(f"Successfully ingested new Shopify order: {order_id}")
+    if created:
+        logger.info(f"Successfully ingested new Shopify order and scheduled confirmation: {order_id}")
     else:
         logger.info(f"Ignored duplicate Shopify order webhook: {order_id}")
         
-    return {"status": "success", "order_id": order_id}
+    return {"status": "success", "order_id": order_id, "created": created}

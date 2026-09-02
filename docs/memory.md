@@ -117,7 +117,7 @@ Append-only working memory for this repo. Newest entries at the bottom of each s
 | 1.2 PostgreSQL order models | done | Alembic migrations created and applied |
 | 1.3 Shopify webhook ingest | done | HMAC validation and Idempotent DB upserts |
 | 1.4 Shopify Admin read | done | Implemented async client with httpx |
-| 1.5 Confirmation LangGraph + workflow_tasks | not started | |
+| 1.5 Confirmation LangGraph + workflow_tasks | implemented | Durable task model, state routing, idempotent scheduling, and automated tests added. Apply Alembic revision `4a4b2e4bbf33` when the local PostgreSQL container is running; provider integration remains in 1.6/1.8. |
 | 1.6 Retell + Plivo outbound | not started | |
 | 1.7 Confirmation tool APIs incl. search_knowledge | not started | |
 | 1.8 Retry on no-answer | not started | |

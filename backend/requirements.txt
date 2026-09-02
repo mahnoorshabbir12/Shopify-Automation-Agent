@@ -6,3 +6,5 @@ alembic
 asyncpg
 greenlet
 httpx
+langgraph
+pytest
