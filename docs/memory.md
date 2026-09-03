@@ -123,7 +123,7 @@ Append-only working memory for this repo. Newest entries at the bottom of each s
 | 1.8 Retry on no-answer | implemented | [`docs/MODULE_1_8.md`](MODULE_1_8.md) — Tiered exponential backoff (2h/24h/48h), idempotent call-ended webhook, `UNREACHABLE` handling. |
 | 1.9 Our LangChain RAG | implemented | [`docs/MODULE_1_9.md`](MODULE_1_9.md) — Qdrant vector database (Docker + in-memory fallback), dense semantic embeddings, policy docs. |
 | 1.10 React confirmation queue | implemented | [`docs/MODULE_1_10.md`](MODULE_1_10.md) — Sleek light-mode SaaS UI, 3D interactive pipeline, live activity feed, audit drawer. |
-| 1.11 LangSmith | in progress | Tracing, observability, and evaluation. |
+| 1.11 LangSmith Evaluation & Benchmarking | done | [`docs/MODULE_1_11.md`](MODULE_1_11.md) — Golden datasets, guardrail evaluators (3-pt COD, 7-day refund, courier optimization), and regression test suite. |
 | 2.1 Courier Domain Models & Adapters | implemented | [`docs/MODULE_2_1.md`](MODULE_2_1.md) — PostgreSQL shipment schema, `CourierAdapter` protocol, TCS/PostEx/BlueEX adapters and registry. |
 | 2.2 Shipping LangGraph Decision Engine | implemented | [`docs/MODULE_2_2.md`](MODULE_2_2.md) — Pure LangGraph multi-courier selection, cost/SLA optimization, and exception routing. |
 | 2.3 Automated Booking & Shopify Sync | implemented | [`docs/MODULE_2_3.md`](MODULE_2_3.md) — Courier booking execution, AWB persistence, Shopify fulfillment sync, and Dispatch UI tab. |
@@ -133,6 +133,7 @@ Append-only working memory for this repo. Newest entries at the bottom of each s
 | 4.1 Multi-Channel Messaging & Alerts | implemented | [`docs/MODULE_4_1.md`](MODULE_4_1.md) — WhatsApp Cloud API & SMS fallback, automated dispatch alerts with tracking links, two-way reply confirmation. |
 | 4.2 Executive Analytics & Intelligence | implemented | [`docs/MODULE_4_2.md`](MODULE_4_2.md) — Real-time confirmation funnels, courier SLA/cost benchmarks, margin health, and support FCR. |
 | 4.3 End-to-End Lifecycle Orchestrator | implemented | [`docs/MODULE_4_3.md`](MODULE_4_3.md) — Autonomous event cascade across Confirmation, Shipping, and Support + LangSmith observability. |
+| 5.1 Interactive WhatsApp Two-Way Engine | done | [`docs/MODULE_5_1.md`](MODULE_5_1.md) — Meta Cloud API interactive buttons, webhook challenge, 3-branch reply routing (confirm/reschedule/cancel). |
 
 ---
 
