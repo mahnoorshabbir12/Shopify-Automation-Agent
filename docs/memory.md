@@ -130,6 +130,9 @@ Append-only working memory for this repo. Newest entries at the bottom of each s
 | 3.1 Support Models & Live Tool APIs | implemented | [`docs/MODULE_3_1.md`](MODULE_3_1.md) — Support tickets, complaints, 7-day refund guardrails, live tracking and inventory tools. |
 | 3.2 Support LangGraph Conversational Engine | implemented | [`docs/MODULE_3_2.md`](MODULE_3_2.md) — Dual-knowledge router (static policy RAG vs live tools), sentiment analysis, and escalation. |
 | 3.3 Support Helpdesk & Live Simulator | implemented | [`docs/MODULE_3_3.md`](MODULE_3_3.md) — React Support & Complaints desk tab and interactive web chat/voice customer simulator. |
+| 4.1 Multi-Channel Messaging & Alerts | implemented | [`docs/MODULE_4_1.md`](MODULE_4_1.md) — WhatsApp Cloud API & SMS fallback, automated dispatch alerts with tracking links, two-way reply confirmation. |
+| 4.2 Executive Analytics & Intelligence | implemented | [`docs/MODULE_4_2.md`](MODULE_4_2.md) — Real-time confirmation funnels, courier SLA/cost benchmarks, margin health, and support FCR. |
+| 4.3 End-to-End Lifecycle Orchestrator | implemented | [`docs/MODULE_4_3.md`](MODULE_4_3.md) — Autonomous event cascade across Confirmation, Shipping, and Support + LangSmith observability. |
 
 ---
 
