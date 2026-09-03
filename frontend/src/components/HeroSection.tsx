@@ -221,34 +221,35 @@ export const HeroSection: React.FC = () => {
             className="surface-card"
             style={{
               position: "absolute",
-              top: "175px",
-              left: "235px",
-              width: "135px",
-              height: "135px",
+              top: "165px",
+              left: "225px",
+              width: "155px",
+              height: "155px",
               borderRadius: "50%",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "center",
               zIndex: 4,
-              border: "1.5px solid rgba(2, 132, 199, 0.3)",
-              boxShadow: "0 12px 30px rgba(2, 132, 199, 0.15), 0 0 0 8px rgba(224, 242, 254, 0.5)"
+              border: "1.5px solid rgba(2, 132, 199, 0.35)",
+              boxShadow: "0 12px 32px rgba(2, 132, 199, 0.18), 0 0 0 8px rgba(224, 242, 254, 0.55)",
+              padding: "0.5rem"
             }}
           >
             {/* Spinning Outer Ring */}
             <div className="anim-spin-slow" style={{
               position: "absolute",
-              width: "115px",
-              height: "115px",
+              width: "135px",
+              height: "135px",
               borderRadius: "50%",
               border: "2px dashed #0284C7",
-              opacity: 0.5
+              opacity: 0.45
             }} />
 
             {/* AI Core Icon */}
             <div style={{
-              width: "48px",
-              height: "48px",
+              width: "44px",
+              height: "44px",
               borderRadius: "50%",
               background: "linear-gradient(135deg, #0284C7 0%, #0369A1 100%)",
               display: "flex",
@@ -256,16 +257,24 @@ export const HeroSection: React.FC = () => {
               justifyContent: "center",
               color: "#FFFFFF",
               boxShadow: "0 4px 12px rgba(2, 132, 199, 0.35)",
-              marginBottom: "0.25rem"
+              marginBottom: "0.35rem",
+              position: "relative",
+              zIndex: 2
             }}>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="12" cy="12" r="3" />
                 <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
               </svg>
             </div>
-            <span style={{ fontSize: "0.6875rem", fontWeight: 800, color: "var(--text-primary)", letterSpacing: "0.02em" }}>
-              AI ORCHESTRATOR
-            </span>
+
+            <div style={{ textAlign: "center", position: "relative", zIndex: 2, lineHeight: 1.25 }}>
+              <div style={{ fontSize: "0.6875rem", fontWeight: 800, color: "var(--text-primary)", letterSpacing: "0.03em" }}>
+                AI ORCHESTRATOR
+              </div>
+              <div style={{ fontSize: "0.5625rem", fontWeight: 700, color: "var(--ai-cyan)", letterSpacing: "0.06em", textTransform: "uppercase" }}>
+                NEURAL CORE
+              </div>
+            </div>
           </div>
 
           {/* Floating Node 3: Customer Voice Verification Card (Top Right) */}
