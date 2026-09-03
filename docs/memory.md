@@ -41,7 +41,7 @@ Append-only working memory for this repo. Newest entries at the bottom of each s
 
 - Updated `PRD.md` to v1.1.
 - Updated `ARCHITECTURE.md` and `TECH_STACK.md` to match.
-- Created `FUTURE_PROSPEcripts.md` (prepaid, Celery, WhatsApp, Vapi, analytics, …).
+- Created `FUTURE_PROSPECTS.md` (prepaid, Celery, WhatsApp, Vapi, analytics, …).
 
 ### 2026-08-31 — Monorepo Restructure & Modules 1.1/1.2
 
@@ -119,7 +119,7 @@ Append-only working memory for this repo. Newest entries at the bottom of each s
 | 1.4 Shopify Admin read | done | Implemented async client with httpx |
 | 1.5 Confirmation LangGraph + workflow_tasks | implemented | Durable task model, state routing, idempotent scheduling, and automated tests added. Apply Alembic revision `4a4b2e4bbf33` when the local PostgreSQL container is running; provider integration remains in 1.6/1.8. |
 | 1.6 Retell + Plivo outbound | implemented | Custom async loop `worker.py` and `RetellClient` created. |
-| 1.7 Confirmation tool APIs incl. search_knowledge | not started | |
+| 1.7 Confirmation tool APIs incl. search_knowledge | implemented | Secure `/tools/*` endpoints, 3-point COD confirmation, callback scheduling, human escalation, and KnowledgeService implemented with 13 automated tests. |
 | 1.8 Retry on no-answer | not started | |
 | 1.9 Our LangChain RAG | not started | |
 | 1.10 React confirmation queue | not started | |

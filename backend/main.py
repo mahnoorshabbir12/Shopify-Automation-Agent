@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from backend.core.config import settings
-from backend.api.endpoints import webhooks
+from backend.api.endpoints import tools, webhooks
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -27,4 +27,5 @@ async def health_check():
 
 # Include routers
 app.include_router(webhooks.router, prefix="/webhooks", tags=["webhooks"])
+app.include_router(tools.router, prefix="/tools", tags=["tools"])
 

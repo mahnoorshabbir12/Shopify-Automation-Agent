@@ -23,6 +23,7 @@ class Settings(BaseSettings):
     RETELL_API_KEY: str = "mock-key-for-tests"
     RETELL_AGENT_ID: str = "mock-agent-for-tests"
     PLIVO_PHONE_NUMBER: str = "+1234567890"
+    TOOL_API_KEY: str = "test-tool-api-key"
 
 
     model_config = SettingsConfigDict(
