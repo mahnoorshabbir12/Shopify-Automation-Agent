@@ -131,31 +131,51 @@ export const AgentsSection: React.FC = () => {
             </circle>
           </svg>
 
-          {/* Central Static Round AI Core Globe */}
+          {/* Central AI Orb with Orbital Rings (Non-Blinking Core) */}
           <div style={{
             position: "relative",
-            width: "140px",
-            height: "140px",
+            width: "150px",
+            height: "150px",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             zIndex: 3
           }}>
-            {/* Subtle Static Outer Ambient Ring */}
-            <div style={{
+            {/* Outer Gyro Ring (Green) */}
+            <div className="anim-gyro" style={{
               position: "absolute",
-              width: "108px",
-              height: "108px",
+              width: "140px",
+              height: "140px",
               borderRadius: "50%",
-              border: "1.5px solid rgba(2, 132, 199, 0.15)",
-              backgroundColor: "rgba(224, 242, 254, 0.3)"
+              border: "2px dashed #008060",
+              opacity: 0.55
             }} />
 
-            {/* Static Clean Round AI Globe */}
+            {/* Middle Gyro Ring (Cyan) */}
+            <div className="anim-gyro-alt" style={{
+              position: "absolute",
+              width: "115px",
+              height: "115px",
+              borderRadius: "50%",
+              border: "2px solid #0284C7",
+              opacity: 0.65
+            }} />
+
+            {/* Inner Rotating Ring (Teal) */}
+            <div className="anim-spin-slow" style={{
+              position: "absolute",
+              width: "90px",
+              height: "90px",
+              borderRadius: "50%",
+              border: "1.5px dotted #0D9488",
+              opacity: 0.75
+            }} />
+
+            {/* Center Neural Core Globe (Steady & Solid, No Blinking) */}
             <div
               style={{
-                width: "76px",
-                height: "76px",
+                width: "68px",
+                height: "68px",
                 borderRadius: "50%",
                 background: "linear-gradient(135deg, #0284C7 0%, #008060 100%)",
                 display: "flex",
@@ -163,17 +183,17 @@ export const AgentsSection: React.FC = () => {
                 alignItems: "center",
                 justifyContent: "center",
                 color: "#FFFFFF",
-                boxShadow: "0 8px 24px rgba(2, 132, 199, 0.22), 0 0 0 5px rgba(255, 255, 255, 0.95)",
+                boxShadow: "0 6px 22px rgba(2, 132, 199, 0.4), 0 0 0 4px rgba(255, 255, 255, 0.95)",
                 textAlign: "center",
                 position: "relative",
-                zIndex: 2
+                zIndex: 4
               }}
             >
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="12" cy="12" r="3" />
                 <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
               </svg>
-              <span style={{ fontSize: "0.5625rem", fontWeight: 800, letterSpacing: "0.06em", marginTop: "0.2rem" }}>
+              <span style={{ fontSize: "0.525rem", fontWeight: 800, letterSpacing: "0.06em", marginTop: "0.15rem" }}>
                 AI CORE
               </span>
             </div>

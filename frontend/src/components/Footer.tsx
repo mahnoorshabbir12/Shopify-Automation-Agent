@@ -2,188 +2,187 @@ import React from "react";
 
 export const Footer: React.FC = () => {
   return (
-    <footer style={{
-      backgroundColor: "#0B1120",
-      color: "#94A3B8",
-      borderTop: "1px solid rgba(255, 255, 255, 0.08)",
-      position: "relative",
-      padding: "3.5rem 0 2rem 0",
-      overflow: "hidden"
-    }}>
-      {/* Subtle Top Gradient Ambient Light */}
+    <footer style={{ position: "relative", overflow: "hidden" }}>
+      {/* Shaped Top Border (Smooth Wave Contour) with Subtle Animated Shimmer Beam */}
+      <div style={{ position: "relative", width: "100%", overflow: "hidden", lineHeight: 0 }}>
+        <svg
+          viewBox="0 0 1440 54"
+          fill="none"
+          preserveAspectRatio="none"
+          style={{ width: "100%", height: "46px", display: "block" }}
+        >
+          <defs>
+            <linearGradient id="waveGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#A7F3D0" stopOpacity="0.3" />
+              <stop offset="50%" stopColor="#FFFFFF" stopOpacity="0.95">
+                <animate attributeName="offset" values="0;1;0" dur="5s" repeatCount="indefinite" />
+              </stop>
+              <stop offset="100%" stopColor="#A7F3D0" stopOpacity="0.3" />
+            </linearGradient>
+          </defs>
+          {/* Wave fill using the website's Shopify Green */}
+          <path
+            d="M 0,26 C 360,48 720,4 1080,28 C 1260,38 1380,16 1440,22 L 1440,54 L 0,54 Z"
+            fill="var(--shopify-green)"
+          />
+          {/* Animated Wave Crest Line */}
+          <path
+            d="M 0,26 C 360,48 720,4 1080,28 C 1260,38 1380,16 1440,22"
+            stroke="url(#waveGlow)"
+            strokeWidth="3"
+            fill="none"
+          />
+        </svg>
+      </div>
+
+      {/* Main Footer Body (Vibrant Shopify Green Matching Website Theme) */}
       <div style={{
-        position: "absolute",
-        top: 0,
-        left: "50%",
-        transform: "translateX(-50%)",
-        width: "600px",
-        height: "1px",
-        background: "linear-gradient(90deg, transparent, var(--shopify-green), #0284C7, transparent)",
-        opacity: 0.8
-      }} />
-
-      <div className="container">
-        {/* Main Footer Grid */}
+        background: "linear-gradient(180deg, var(--shopify-green) 0%, #006E52 100%)",
+        color: "#E6F4EA",
+        padding: "1.75rem 0 1.75rem 0",
+        position: "relative"
+      }}>
+        {/* Subtle Ambient Radial Highlight */}
         <div style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-          gap: "2.5rem",
-          marginBottom: "3rem"
-        }}>
-          {/* Column 1: Brand & Purpose */}
-          <div style={{ gridColumn: "span 1", minWidth: "240px" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "0.6rem", marginBottom: "1rem" }}>
-              <div style={{
-                width: "32px",
-                height: "32px",
-                borderRadius: "8px",
-                background: "linear-gradient(135deg, #008060 0%, #004C3F 100%)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                boxShadow: "0 2px 8px rgba(0, 128, 96, 0.4)"
+          position: "absolute",
+          top: "10px",
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: "600px",
+          height: "140px",
+          background: "radial-gradient(ellipse at top, rgba(255, 255, 255, 0.15) 0%, transparent 70%)",
+          pointerEvents: "none"
+        }} />
+
+        <div className="container">
+          {/* Compact 3-Column Layout */}
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "1.4fr 1fr 1fr",
+            gap: "2.5rem",
+            marginBottom: "1.75rem",
+            alignItems: "start"
+          }}>
+            {/* Column 1: Brand & Purpose */}
+            <div>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.6rem", marginBottom: "0.75rem" }}>
+                <div style={{
+                  width: "32px",
+                  height: "32px",
+                  borderRadius: "8px",
+                  backgroundColor: "#FFFFFF",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.15)"
+                }}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--shopify-green)" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                  </svg>
+                </div>
+                <div style={{ fontWeight: 800, fontSize: "1.125rem", color: "#FFFFFF", letterSpacing: "-0.02em" }}>
+                  Shopify<span style={{ color: "#A7F3D0" }}>AI</span> Ops
+                </div>
+              </div>
+
+              <p style={{
+                fontSize: "0.8125rem",
+                lineHeight: 1.6,
+                color: "#E6F4EA",
+                marginBottom: "1rem",
+                maxWidth: "340px"
               }}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-                </svg>
+                Autonomous COD confirmation calls, intelligent 3PL carrier dispatch, and 24/7 AI helpdesk engineered for high-growth e-commerce brands.
+              </p>
+
+              <div style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                padding: "0.3rem 0.75rem",
+                borderRadius: "9999px",
+                backgroundColor: "rgba(255, 255, 255, 0.15)",
+                border: "1px solid rgba(255, 255, 255, 0.25)",
+                fontSize: "0.75rem",
+                color: "#FFFFFF",
+                fontWeight: 700
+              }}>
+                <span style={{ width: "6px", height: "6px", borderRadius: "50%", backgroundColor: "#34D399" }} className="anim-pulse" />
+                All Systems Operational (99.99% Uptime)
               </div>
-              <div style={{ fontWeight: 800, fontSize: "1.125rem", letterSpacing: "-0.02em", color: "#FFFFFF" }}>
-                Shopify<span style={{ color: "var(--shopify-green)" }}>AI</span> Ops
+            </div>
+
+            {/* Column 2: Capabilities */}
+            <div>
+              <div style={{ fontSize: "0.8125rem", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", color: "#FFFFFF", marginBottom: "0.75rem" }}>
+                Capabilities
               </div>
+              <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "0.5rem", fontSize: "0.8125rem" }}>
+                <li>
+                  <a href="#console" style={{ color: "#E6F4EA", textDecoration: "none", transition: "color 0.15s" }} onMouseEnter={(e) => (e.currentTarget.style.color = "#FFFFFF")} onMouseLeave={(e) => (e.currentTarget.style.color = "#E6F4EA")}>
+                    Voice Confirmation AI
+                  </a>
+                </li>
+                <li>
+                  <a href="#console" style={{ color: "#E6F4EA", textDecoration: "none", transition: "color 0.15s" }} onMouseEnter={(e) => (e.currentTarget.style.color = "#FFFFFF")} onMouseLeave={(e) => (e.currentTarget.style.color = "#E6F4EA")}>
+                    Autonomous 3PL Logistics Router
+                  </a>
+                </li>
+                <li>
+                  <a href="#console" style={{ color: "#E6F4EA", textDecoration: "none", transition: "color 0.15s" }} onMouseEnter={(e) => (e.currentTarget.style.color = "#FFFFFF")} onMouseLeave={(e) => (e.currentTarget.style.color = "#E6F4EA")}>
+                    Customer Support Helpdesk
+                  </a>
+                </li>
+                <li>
+                  <a href="#pipeline" style={{ color: "#E6F4EA", textDecoration: "none", transition: "color 0.15s" }} onMouseEnter={(e) => (e.currentTarget.style.color = "#FFFFFF")} onMouseLeave={(e) => (e.currentTarget.style.color = "#E6F4EA")}>
+                    Autonomous Order Pipeline
+                  </a>
+                </li>
+              </ul>
             </div>
 
-            <p style={{
-              fontSize: "0.875rem",
-              lineHeight: 1.6,
-              color: "#94A3B8",
-              marginBottom: "1.25rem"
-            }}>
-              Autonomous COD confirmation, intelligent 3PL carrier dispatch, and 24/7 AI customer service engineered for high-volume commerce brands.
-            </p>
-
-            <div style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "0.5rem",
-              padding: "0.35rem 0.75rem",
-              borderRadius: "9999px",
-              backgroundColor: "rgba(0, 128, 96, 0.12)",
-              border: "1px solid rgba(0, 128, 96, 0.3)",
-              fontSize: "0.75rem",
-              color: "#34D399",
-              fontWeight: 600
-            }}>
-              <span style={{ width: "6px", height: "6px", borderRadius: "50%", backgroundColor: "#10B981" }} className="anim-pulse" />
-              Enterprise Platform
+            {/* Column 3: Carrier Protocols & Trust */}
+            <div>
+              <div style={{ fontSize: "0.8125rem", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", color: "#FFFFFF", marginBottom: "0.75rem" }}>
+                Carrier Protocols
+              </div>
+              <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "0.5rem", fontSize: "0.8125rem", color: "#E6F4EA" }}>
+                <li style={{ display: "flex", alignItems: "center", gap: "0.45rem" }}>
+                  <span style={{ color: "#34D399", fontWeight: 800 }}>✓</span> BlueEX, PostEx & TCS Express
+                </li>
+                <li style={{ display: "flex", alignItems: "center", gap: "0.45rem" }}>
+                  <span style={{ color: "#34D399", fontWeight: 800 }}>✓</span> Shopify & Shopify Plus Webhooks
+                </li>
+                <li style={{ display: "flex", alignItems: "center", gap: "0.45rem" }}>
+                  <span style={{ color: "#34D399", fontWeight: 800 }}>✓</span> SOC 2 Type II Compliant
+                </li>
+                <li style={{ display: "flex", alignItems: "center", gap: "0.45rem" }}>
+                  <span style={{ color: "#34D399", fontWeight: 800 }}>✓</span> End-to-End PII Encryption
+                </li>
+              </ul>
             </div>
           </div>
 
-          {/* Column 2: Platform Capabilities */}
-          <div>
-            <div style={{ fontSize: "0.8125rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "#F8FAFC", marginBottom: "1rem" }}>
-              Capabilities
-            </div>
-            <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "0.6rem", fontSize: "0.875rem" }}>
-              <li>
-                <a href="#console" style={{ color: "inherit", textDecoration: "none", transition: "color 0.15s" }} onMouseEnter={(e) => (e.currentTarget.style.color = "#FFFFFF")} onMouseLeave={(e) => (e.currentTarget.style.color = "#94A3B8")}>
-                  Voice Order Confirmation
-                </a>
-              </li>
-              <li>
-                <a href="#console" style={{ color: "inherit", textDecoration: "none", transition: "color 0.15s" }} onMouseEnter={(e) => (e.currentTarget.style.color = "#FFFFFF")} onMouseLeave={(e) => (e.currentTarget.style.color = "#94A3B8")}>
-                  Autonomous 3PL Dispatch
-                </a>
-              </li>
-              <li>
-                <a href="#console" style={{ color: "inherit", textDecoration: "none", transition: "color 0.15s" }} onMouseEnter={(e) => (e.currentTarget.style.color = "#FFFFFF")} onMouseLeave={(e) => (e.currentTarget.style.color = "#94A3B8")}>
-                  Customer Support Helpdesk
-                </a>
-              </li>
-              <li>
-                <a href="#pipeline" style={{ color: "inherit", textDecoration: "none", transition: "color 0.15s" }} onMouseEnter={(e) => (e.currentTarget.style.color = "#FFFFFF")} onMouseLeave={(e) => (e.currentTarget.style.color = "#94A3B8")}>
-                  Self-Driving Workflow Pipeline
-                </a>
-              </li>
-              <li>
-                <a href="#console" style={{ color: "inherit", textDecoration: "none", transition: "color 0.15s" }} onMouseEnter={(e) => (e.currentTarget.style.color = "#FFFFFF")} onMouseLeave={(e) => (e.currentTarget.style.color = "#94A3B8")}>
-                  Real-Time Operational Telemetry
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          {/* Column 3: Logistics & Integrations */}
-          <div>
-            <div style={{ fontSize: "0.8125rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "#F8FAFC", marginBottom: "1rem" }}>
-              Integrations
-            </div>
-            <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "0.6rem", fontSize: "0.875rem" }}>
-              <li>Shopify & Shopify Plus</li>
-              <li>BlueEX Logistics</li>
-              <li>PostEx Express</li>
-              <li>TCS Express Courier</li>
-              <li>Leopard & Trax Logistics</li>
-              <li>WhatsApp Business Cloud API</li>
-            </ul>
-          </div>
-
-          {/* Column 4: Enterprise Trust & Security */}
-          <div>
-            <div style={{ fontSize: "0.8125rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "#F8FAFC", marginBottom: "1rem" }}>
-              Trust & Security
-            </div>
-            <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "0.6rem", fontSize: "0.875rem" }}>
-              <li style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
-                <span style={{ color: "var(--shopify-green)" }}>✓</span> SOC 2 Type II Certified
-              </li>
-              <li style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
-                <span style={{ color: "var(--shopify-green)" }}>✓</span> 99.99% Operational SLA
-              </li>
-              <li style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
-                <span style={{ color: "var(--shopify-green)" }}>✓</span> Zero Data Loss Guarantee
-              </li>
-              <li style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
-                <span style={{ color: "var(--shopify-green)" }}>✓</span> End-to-End Encryption
-              </li>
-              <li style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
-                <span style={{ color: "var(--shopify-green)" }}>✓</span> Idempotent Event Delivery
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        {/* Bottom Bar: Copyright & Live System Status */}
-        <div style={{
-          paddingTop: "1.75rem",
-          borderTop: "1px solid rgba(255, 255, 255, 0.08)",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          fontSize: "0.8125rem",
-          color: "#64748B",
-          flexWrap: "wrap",
-          gap: "1rem"
-        }}>
-          <div>
-            © 2026 ShopifyAI Ops Inc. All rights reserved. Built for high-growth e-commerce operations.
-          </div>
-
-          <div style={{ display: "flex", alignItems: "center", gap: "1.75rem", flexWrap: "wrap" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-              <span style={{
-                width: "8px",
-                height: "8px",
-                borderRadius: "50%",
-                backgroundColor: "#10B981",
-                boxShadow: "0 0 8px #10B981"
-              }} className="anim-pulse" />
-              <span style={{ color: "#E2E8F0", fontWeight: 600 }}>All Systems Operational (99.99% Uptime)</span>
+          {/* Compact Bottom Bar */}
+          <div style={{
+            paddingTop: "1.25rem",
+            borderTop: "1px solid rgba(255, 255, 255, 0.15)",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            fontSize: "0.75rem",
+            color: "#CCFBF1",
+            flexWrap: "wrap",
+            gap: "1rem"
+          }}>
+            <div>
+              © 2026 ShopifyAI Ops Inc. All rights reserved.
             </div>
 
-            <div style={{ display: "flex", gap: "1.25rem" }}>
-              <span style={{ cursor: "pointer" }} onMouseEnter={(e) => (e.currentTarget.style.color = "#CBD5E1")} onMouseLeave={(e) => (e.currentTarget.style.color = "#64748B")}>Privacy Policy</span>
-              <span style={{ cursor: "pointer" }} onMouseEnter={(e) => (e.currentTarget.style.color = "#CBD5E1")} onMouseLeave={(e) => (e.currentTarget.style.color = "#64748B")}>Terms of Service</span>
-              <span style={{ cursor: "pointer" }} onMouseEnter={(e) => (e.currentTarget.style.color = "#CBD5E1")} onMouseLeave={(e) => (e.currentTarget.style.color = "#64748B")}>Security Disclosures</span>
+            <div style={{ display: "flex", gap: "1.5rem" }}>
+              <span style={{ cursor: "pointer", transition: "color 0.15s" }} onMouseEnter={(e) => (e.currentTarget.style.color = "#FFFFFF")} onMouseLeave={(e) => (e.currentTarget.style.color = "#CCFBF1")}>Privacy Policy</span>
+              <span style={{ cursor: "pointer", transition: "color 0.15s" }} onMouseEnter={(e) => (e.currentTarget.style.color = "#FFFFFF")} onMouseLeave={(e) => (e.currentTarget.style.color = "#CCFBF1")}>Terms of Service</span>
+              <span style={{ cursor: "pointer", transition: "color 0.15s" }} onMouseEnter={(e) => (e.currentTarget.style.color = "#FFFFFF")} onMouseLeave={(e) => (e.currentTarget.style.color = "#CCFBF1")}>Security</span>
             </div>
           </div>
         </div>

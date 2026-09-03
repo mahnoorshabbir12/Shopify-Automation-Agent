@@ -75,7 +75,7 @@ interface ChatMessage {
 }
 
 export const OperationsConsole: React.FC = () => {
-  const [consoleMode, setConsoleMode] = useState<"confirmation" | "dispatch" | "support" | "executive">("confirmation");
+  const [consoleMode, setConsoleMode] = useState<"radar" | "confirmation" | "dispatch" | "support" | "executive">("radar");
   const [activeTab, setActiveTab] = useState("all");
   const [orders, setOrders] = useState<OrderItem[]>([]);
   const [shipments, setShipments] = useState<ShipmentItem[]>([]);
@@ -132,8 +132,8 @@ export const OperationsConsole: React.FC = () => {
     return () => clearInterval(tickerTimer);
   }, []);
 
-  const handleQuickDispatch = async (orderId: string, e: React.MouseEvent) => {
-    e.stopPropagation();
+  const handleQuickDispatch = async (orderId: string, e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
     setQuickDispatchedId(orderId);
     try {
       const res = await fetch("http://localhost:8000/api/v1/shipments/book", {
@@ -576,6 +576,20 @@ export const OperationsConsole: React.FC = () => {
     }
   };
 
+  const handleCallCustomer = (orderId: string, e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: "calling" } : o));
+    setTimeout(() => {
+      setOrders(prev => prev.map(o => o.id === orderId ? {
+        ...o,
+        status: "confirmed",
+        is_address_confirmed: true,
+        is_amount_confirmed: true,
+        intent_to_receive: true
+      } : o));
+    }, 2500);
+  };
+
   return (
     <section id="console" style={{
       scrollMarginTop: "90px",
@@ -610,6 +624,27 @@ export const OperationsConsole: React.FC = () => {
               gap: "0.35rem",
               boxShadow: "inset 0 1px 2px rgba(15, 23, 42, 0.04)"
             }}>
+              <button
+                onClick={() => setConsoleMode("radar")}
+                style={{
+                  padding: "0.5rem 1rem",
+                  borderRadius: "9px",
+                  border: "none",
+                  backgroundColor: consoleMode === "radar" ? "#FFFFFF" : "transparent",
+                  color: consoleMode === "radar" ? "var(--shopify-green)" : "var(--text-secondary)",
+                  fontWeight: 700,
+                  fontSize: "0.8125rem",
+                  cursor: "pointer",
+                  boxShadow: consoleMode === "radar" ? "0 2px 8px rgba(15, 23, 42, 0.08)" : "none",
+                  transition: "all 0.2s",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.45rem"
+                }}
+              >
+                <span style={{ width: "7px", height: "7px", borderRadius: "50%", backgroundColor: "var(--shopify-green)" }} className="anim-pulse" />
+                ⚡ Live Operations Radar
+              </button>
               <button
                 onClick={() => setConsoleMode("confirmation")}
                 style={{
@@ -697,16 +732,16 @@ export const OperationsConsole: React.FC = () => {
             </div>
           </div>
 
-          {/* Real-Time Live Telemetry Stream Ribbon (Elevated Dark Surface) */}
+          {/* Real-Time Live Telemetry Stream Ribbon (Clean Light Surface) */}
           <div style={{
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
             padding: "0.65rem 1.25rem",
-            backgroundColor: "#0B1120",
+            backgroundColor: "var(--bg-surface)",
             borderRadius: "10px",
-            border: "1px solid rgba(255, 255, 255, 0.08)",
-            boxShadow: "0 4px 12px rgba(15, 23, 42, 0.08)",
+            border: "1px solid var(--border-subtle)",
+            boxShadow: "var(--shadow-sm)",
             flexWrap: "wrap",
             gap: "0.75rem"
           }}>
@@ -716,9 +751,9 @@ export const OperationsConsole: React.FC = () => {
                 width: "8px",
                 height: "8px",
                 borderRadius: "50%",
-                backgroundColor: "#10B981"
+                backgroundColor: "var(--shopify-green)"
               }} className="anim-pulse" />
-              <span style={{ fontSize: "0.75rem", fontWeight: 800, color: "#FFFFFF", letterSpacing: "0.04em" }}>
+              <span style={{ fontSize: "0.75rem", fontWeight: 800, color: "var(--text-primary)", letterSpacing: "0.04em" }}>
                 LIVE TELEMETRY STREAM
               </span>
               <span style={{
@@ -726,8 +761,9 @@ export const OperationsConsole: React.FC = () => {
                 fontWeight: 700,
                 padding: "0.15rem 0.5rem",
                 borderRadius: "9999px",
-                backgroundColor: "rgba(16, 185, 129, 0.15)",
-                color: "#34D399"
+                backgroundColor: "var(--shopify-green-light)",
+                color: "var(--shopify-green)",
+                border: "1px solid rgba(0, 128, 96, 0.2)"
               }}>
                 28ms latency
               </span>
@@ -739,7 +775,7 @@ export const OperationsConsole: React.FC = () => {
               alignItems: "center",
               gap: "0.6rem",
               fontSize: "0.8125rem",
-              color: "#E2E8F0",
+              color: "var(--text-secondary)",
               overflow: "hidden",
               textOverflow: "ellipsis",
               whiteSpace: "nowrap",
@@ -750,16 +786,16 @@ export const OperationsConsole: React.FC = () => {
                 fontWeight: 800,
                 padding: "0.15rem 0.45rem",
                 borderRadius: "4px",
-                backgroundColor: "rgba(255, 255, 255, 0.1)",
+                backgroundColor: "var(--bg-subtle)",
                 color: TELEMETRY_FEED[tickerIndex].tagColor,
                 textTransform: "uppercase"
               }}>
                 {TELEMETRY_FEED[tickerIndex].tag}
               </span>
-              <span style={{ color: "#64748B", fontSize: "0.75rem", fontFamily: "var(--font-mono)" }}>
+              <span style={{ color: "var(--text-muted)", fontSize: "0.75rem", fontFamily: "var(--font-mono)" }}>
                 [{TELEMETRY_FEED[tickerIndex].time}]
               </span>
-              <span style={{ fontWeight: 500 }}>
+              <span style={{ fontWeight: 600, color: "var(--text-primary)" }}>
                 {TELEMETRY_FEED[tickerIndex].text}
               </span>
             </div>
@@ -773,11 +809,11 @@ export const OperationsConsole: React.FC = () => {
                 gap: "0.45rem",
                 padding: "0.3rem 0.8rem",
                 borderRadius: "9999px",
-                border: autoPilotActive ? "1px solid #10B981" : "1px solid #475569",
-                backgroundColor: autoPilotActive ? "rgba(16, 185, 129, 0.15)" : "transparent",
-                color: autoPilotActive ? "#34D399" : "#94A3B8",
-                fontWeight: 700,
+                border: autoPilotActive ? "1px solid var(--shopify-green)" : "1px solid var(--border-medium)",
+                backgroundColor: autoPilotActive ? "var(--shopify-green-light)" : "var(--bg-main)",
+                color: autoPilotActive ? "var(--shopify-green)" : "var(--text-secondary)",
                 fontSize: "0.75rem",
+                fontWeight: 700,
                 cursor: "pointer",
                 transition: "all 0.2s"
               }}
@@ -786,9 +822,9 @@ export const OperationsConsole: React.FC = () => {
                 width: "6px",
                 height: "6px",
                 borderRadius: "50%",
-                backgroundColor: autoPilotActive ? "#10B981" : "#94A3B8"
+                backgroundColor: autoPilotActive ? "var(--shopify-green)" : "var(--text-muted)"
               }} className={autoPilotActive ? "anim-pulse" : ""} />
-              {autoPilotActive ? "Auto-Pilot: ACTIVE" : "Auto-Pilot: PAUSED"}
+              {autoPilotActive ? "Auto-Pilot: ON" : "Auto-Pilot: Manual"}
             </button>
           </div>
         </div>
@@ -876,6 +912,499 @@ export const OperationsConsole: React.FC = () => {
             </div>
           </div>
         </div>
+
+        {/* View Mode 0: Live Autonomous Operations Radar & Cockpit */}
+        {consoleMode === "radar" && (
+          <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+            {/* Main Radar Card (Clean Crisp Modern SaaS Console) */}
+            <div style={{
+              backgroundColor: "var(--bg-surface)",
+              borderRadius: "16px",
+              border: "1px solid var(--border-subtle)",
+              padding: "2rem",
+              boxShadow: "0 10px 30px -5px rgba(15, 23, 42, 0.06), 0 1px 3px rgba(15, 23, 42, 0.04)",
+              position: "relative",
+              overflow: "hidden"
+            }}>
+              {/* Background Subtle Ambient Radial Glow */}
+              <div style={{
+                position: "absolute",
+                top: "-80px",
+                right: "-80px",
+                width: "360px",
+                height: "360px",
+                borderRadius: "50%",
+                background: "radial-gradient(circle, rgba(224, 242, 254, 0.6) 0%, rgba(230, 244, 234, 0.4) 60%, transparent 80%)",
+                filter: "blur(40px)",
+                pointerEvents: "none"
+              }} />
+
+              {/* Radar Console Header */}
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "1rem", marginBottom: "1.5rem", borderBottom: "1px solid var(--border-subtle)", paddingBottom: "1rem" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+                  <div style={{
+                    width: "38px",
+                    height: "38px",
+                    borderRadius: "10px",
+                    backgroundColor: "var(--shopify-green-light)",
+                    border: "1px solid rgba(0, 128, 96, 0.2)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "var(--shopify-green)"
+                  }}>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="10" />
+                      <line x1="2" y1="12" x2="22" y2="12" />
+                      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: "1.125rem", fontWeight: 800, color: "var(--text-primary)", letterSpacing: "-0.01em" }}>
+                      National Logistics & Autonomous Operations Radar
+                    </div>
+                    <div style={{ fontSize: "0.8125rem", color: "var(--text-secondary)" }}>
+                      Live 3PL carrier routing, voice verification waves & automated dispatch across Pakistan
+                    </div>
+                  </div>
+                </div>
+
+                <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+                  <div style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                    padding: "0.35rem 0.85rem",
+                    borderRadius: "9999px",
+                    backgroundColor: "var(--shopify-green-light)",
+                    border: "1px solid rgba(0, 128, 96, 0.25)",
+                    color: "var(--shopify-green)",
+                    fontSize: "0.75rem",
+                    fontWeight: 700
+                  }}>
+                    <span style={{ width: "6px", height: "6px", borderRadius: "50%", backgroundColor: "var(--shopify-green)" }} className="anim-pulse" />
+                    3 Carrier Protocols Live (BlueEX • PostEx • TCS)
+                  </div>
+                </div>
+              </div>
+
+              {/* Grid: Left SVG Radar Map, Right Live Voice & Action Stage */}
+              <div style={{ display: "grid", gridTemplateColumns: "1.3fr 1fr", gap: "2rem", alignItems: "center" }}>
+                {/* Left: Animated Pakistan Logistics Transit Radar (Fresh Clean Palette) */}
+                <div style={{
+                  position: "relative",
+                  width: "100%",
+                  height: "360px",
+                  background: "linear-gradient(135deg, #F8FAFC 0%, #F0FDF4 100%)",
+                  borderRadius: "14px",
+                  border: "1px solid var(--border-subtle)",
+                  overflow: "hidden"
+                }}>
+                  {/* Concentric Radar Distance Rings */}
+                  <div style={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    width: "320px",
+                    height: "320px",
+                    borderRadius: "50%",
+                    border: "1px dashed rgba(0, 128, 96, 0.2)",
+                    pointerEvents: "none"
+                  }} />
+                  <div style={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    width: "210px",
+                    height: "210px",
+                    borderRadius: "50%",
+                    border: "1px solid rgba(2, 132, 199, 0.18)",
+                    pointerEvents: "none"
+                  }} />
+                  <div style={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    width: "110px",
+                    height: "110px",
+                    borderRadius: "50%",
+                    border: "1px solid rgba(0, 128, 96, 0.25)",
+                    pointerEvents: "none"
+                  }} />
+
+                  {/* Rotating Radar Scanner Sweep */}
+                  <div style={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    width: "170px",
+                    height: "170px",
+                    transformOrigin: "top left",
+                    background: "conic-gradient(from 0deg, rgba(0, 128, 96, 0.18) 0deg, transparent 55deg, transparent 360deg)",
+                    borderRadius: "50%",
+                    pointerEvents: "none",
+                    animation: "radarSweep 5.5s linear infinite"
+                  }} />
+
+                  {/* SVG Animated Route Laser Lines & Traveling Courier Pulses */}
+                  <svg style={{ position: "absolute", width: "100%", height: "100%", zIndex: 2 }} viewBox="0 0 540 360" fill="none">
+                    {/* Route 1: Karachi (x: 100, y: 280) to Lahore (x: 350, y: 150) */}
+                    <path
+                      id="radar-khi-lhr"
+                      d="M 100 280 C 180 230, 270 200, 350 150"
+                      stroke="rgba(0, 128, 96, 0.45)"
+                      strokeWidth="2.5"
+                      strokeDasharray="5 5"
+                    />
+                    {/* Courier Particle (BlueEX - Emerald Green) */}
+                    <circle r="5" fill="#008060" filter="drop-shadow(0 2px 5px rgba(0, 128, 96, 0.5))">
+                      <animateMotion dur="3.6s" repeatCount="indefinite">
+                        <mpath href="#radar-khi-lhr" />
+                      </animateMotion>
+                    </circle>
+
+                    {/* Route 2: Lahore (x: 350, y: 150) to Islamabad (x: 440, y: 65) */}
+                    <path
+                      id="radar-lhr-isb"
+                      d="M 350 150 C 380 120, 410 90, 440 65"
+                      stroke="rgba(2, 132, 199, 0.45)"
+                      strokeWidth="2.5"
+                      strokeDasharray="5 5"
+                    />
+                    {/* Courier Particle (PostEx - Cyan) */}
+                    <circle r="4.5" fill="#0284C7" filter="drop-shadow(0 2px 5px rgba(2, 132, 199, 0.5))">
+                      <animateMotion dur="2.4s" repeatCount="indefinite">
+                        <mpath href="#radar-lhr-isb" />
+                      </animateMotion>
+                    </circle>
+
+                    {/* Route 3: Faisalabad (x: 270, y: 175) to Lahore (x: 350, y: 150) */}
+                    <path
+                      id="radar-fsd-lhr"
+                      d="M 270 175 L 350 150"
+                      stroke="rgba(217, 119, 6, 0.45)"
+                      strokeWidth="2"
+                      strokeDasharray="4 4"
+                    />
+                    {/* Courier Particle (TCS - Amber) */}
+                    <circle r="4" fill="#D97706" filter="drop-shadow(0 2px 5px rgba(217, 119, 6, 0.5))">
+                      <animateMotion dur="2.8s" repeatCount="indefinite">
+                        <mpath href="#radar-fsd-lhr" />
+                      </animateMotion>
+                    </circle>
+                  </svg>
+
+                  {/* Interactive Hub Nodes */}
+                  {/* Node 1: Karachi Port Terminal */}
+                  <div style={{ position: "absolute", left: "55px", top: "250px", zIndex: 3, textAlign: "center" }}>
+                    <div style={{
+                      width: "15px",
+                      height: "15px",
+                      borderRadius: "50%",
+                      backgroundColor: "var(--shopify-green)",
+                      boxShadow: "0 0 12px rgba(0, 128, 96, 0.5)",
+                      margin: "0 auto 4px auto"
+                    }} className="anim-pulse" />
+                    <div style={{ fontSize: "0.75rem", fontWeight: 800, color: "var(--text-primary)" }}>Karachi Terminal</div>
+                    <div style={{ fontSize: "0.6875rem", color: "var(--text-secondary)" }}>COD Center (99.1% SLA)</div>
+                  </div>
+
+                  {/* Node 2: Lahore Distribution Hub */}
+                  <div style={{ position: "absolute", left: "305px", top: "120px", zIndex: 3, textAlign: "center" }}>
+                    <div style={{
+                      width: "16px",
+                      height: "16px",
+                      borderRadius: "50%",
+                      backgroundColor: "var(--ai-cyan)",
+                      boxShadow: "0 0 14px rgba(2, 132, 199, 0.5)",
+                      margin: "0 auto 4px auto"
+                    }} className="anim-pulse" />
+                    <div style={{ fontSize: "0.8125rem", fontWeight: 800, color: "var(--text-primary)" }}>Lahore Sorting Hub</div>
+                    <div style={{ fontSize: "0.6875rem", color: "var(--ai-cyan)", fontWeight: 600 }}>Central 3PL Terminal</div>
+                  </div>
+
+                  {/* Node 3: Faisalabad */}
+                  <div style={{ position: "absolute", left: "215px", top: "165px", zIndex: 3, textAlign: "center" }}>
+                    <div style={{
+                      width: "13px",
+                      height: "13px",
+                      borderRadius: "50%",
+                      backgroundColor: "#D97706",
+                      boxShadow: "0 0 10px rgba(217, 119, 6, 0.4)",
+                      margin: "0 auto 4px auto"
+                    }} />
+                    <div style={{ fontSize: "0.6875rem", fontWeight: 700, color: "var(--text-primary)" }}>Faisalabad Hub</div>
+                  </div>
+
+                  {/* Node 4: Islamabad / Rawalpindi */}
+                  <div style={{ position: "absolute", left: "410px", top: "35px", zIndex: 3, textAlign: "center" }}>
+                    <div style={{
+                      width: "15px",
+                      height: "15px",
+                      borderRadius: "50%",
+                      backgroundColor: "#8B5CF6",
+                      boxShadow: "0 0 12px rgba(139, 92, 246, 0.5)",
+                      margin: "0 auto 4px auto"
+                    }} className="anim-pulse" />
+                    <div style={{ fontSize: "0.75rem", fontWeight: 800, color: "var(--text-primary)" }}>Islamabad Priority</div>
+                    <div style={{ fontSize: "0.6875rem", color: "#7C3AED", fontWeight: 600 }}>Next-Day Express</div>
+                  </div>
+
+                  {/* Bottom Corridor Metric Bar */}
+                  <div style={{
+                    position: "absolute",
+                    bottom: "10px",
+                    left: "14px",
+                    right: "14px",
+                    backgroundColor: "rgba(255, 255, 255, 0.94)",
+                    backdropFilter: "blur(8px)",
+                    border: "1px solid var(--border-subtle)",
+                    borderRadius: "8px",
+                    padding: "0.45rem 0.85rem",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    fontSize: "0.75rem",
+                    color: "var(--text-secondary)",
+                    zIndex: 4,
+                    boxShadow: "0 2px 6px rgba(15, 23, 42, 0.04)"
+                  }}>
+                    <span>🟢 <strong style={{ color: "var(--text-primary)" }}>BlueEX:</strong> 12 Parcels En Route</span>
+                    <span>🔵 <strong style={{ color: "var(--text-primary)" }}>PostEx:</strong> 8 Parcels En Route</span>
+                    <span>🟠 <strong style={{ color: "var(--text-primary)" }}>TCS:</strong> 5 Priority Express</span>
+                  </div>
+                </div>
+
+                {/* Right: Live AI Action Stage with Real-Time Waveform & Instant Simulation */}
+                <div style={{
+                  backgroundColor: "var(--bg-surface)",
+                  borderRadius: "14px",
+                  border: "1px solid var(--border-subtle)",
+                  padding: "1.5rem",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  boxShadow: "var(--shadow-sm)"
+                }}>
+                  <div>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1rem" }}>
+                      <div style={{ fontSize: "0.875rem", fontWeight: 800, color: "var(--text-primary)", display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                        <span style={{ width: "8px", height: "8px", borderRadius: "50%", backgroundColor: "var(--shopify-green)" }} className="anim-pulse" />
+                        Live Voice AI Confirmation Turn
+                      </div>
+                      <span style={{
+                        fontSize: "0.6875rem",
+                        fontWeight: 700,
+                        color: "var(--shopify-green)",
+                        backgroundColor: "var(--shopify-green-light)",
+                        padding: "0.15rem 0.5rem",
+                        borderRadius: "9999px",
+                        border: "1px solid rgba(0, 128, 96, 0.2)"
+                      }}>
+                        Call Turn Active
+                      </span>
+                    </div>
+
+                    {/* Target Customer Call Box */}
+                    <div style={{ backgroundColor: "var(--bg-main)", borderRadius: "10px", padding: "1rem", border: "1px solid var(--border-subtle)", marginBottom: "1rem" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <div>
+                          <div style={{ fontWeight: 800, color: "var(--text-primary)", fontSize: "0.9375rem" }}>Zainab Tariq (#10482)</div>
+                          <div style={{ fontSize: "0.75rem", color: "var(--text-muted)", fontFamily: "var(--font-mono)" }}>+92 300 5554433 • Lahore</div>
+                        </div>
+                        <div style={{ textAlign: "right" }}>
+                          <div style={{ fontWeight: 800, color: "var(--shopify-green)", fontSize: "1rem" }}>PKR 4,200</div>
+                          <div style={{ fontSize: "0.6875rem", color: "var(--text-muted)" }}>COD Payable</div>
+                        </div>
+                      </div>
+
+                      {/* Animated Audio Equalizer Waveform */}
+                      <div style={{ marginTop: "1rem", display: "flex", alignItems: "center", gap: "0.75rem", backgroundColor: "var(--shopify-green-light)", padding: "0.5rem 0.75rem", borderRadius: "8px", border: "1px solid rgba(0, 128, 96, 0.15)" }}>
+                        <span style={{ fontSize: "0.6875rem", fontWeight: 700, color: "var(--shopify-green)" }}>Voice Telephony Stream</span>
+                        <div style={{ display: "flex", alignItems: "center", gap: "3px", height: "18px" }}>
+                          {[0.4, 0.8, 0.6, 1, 0.7, 0.9, 0.5].map((h, i) => (
+                            <div
+                              key={i}
+                              style={{
+                                width: "3px",
+                                height: `${h * 16}px`,
+                                backgroundColor: "var(--shopify-green)",
+                                borderRadius: "1px",
+                                animation: `soundBarPulse ${0.5 + i * 0.15}s ease-in-out infinite alternate`
+                              }}
+                            />
+                          ))}
+                        </div>
+                        <span style={{ fontSize: "0.6875rem", color: "var(--text-muted)", marginLeft: "auto", fontFamily: "var(--font-mono)" }}>
+                          2.4m remaining
+                        </span>
+                      </div>
+
+                      {/* 3-Point Agreement Checklist */}
+                      <div style={{ marginTop: "0.75rem", display: "flex", flexDirection: "column", gap: "0.35rem", fontSize: "0.75rem", color: "var(--text-secondary)" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
+                          <span style={{ color: "var(--shopify-green)", fontWeight: 800 }}>✓</span> Delivery Address Verified: Gulberg III, Lahore
+                        </div>
+                        <div style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
+                          <span style={{ color: "var(--shopify-green)", fontWeight: 800 }}>✓</span> Price & COD Terms Accepted: PKR 4,200
+                        </div>
+                        <div style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
+                          <span style={{ color: "var(--shopify-green)", fontWeight: 800 }}>✓</span> Explicit Commitment to Receive Parcel
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Courier Dispatch Optimizer Preview */}
+                    <div style={{ backgroundColor: "var(--bg-main)", borderRadius: "10px", padding: "0.85rem 1rem", border: "1px solid var(--border-subtle)", marginBottom: "1rem" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "0.75rem", marginBottom: "0.5rem" }}>
+                        <span style={{ color: "var(--text-secondary)", fontWeight: 600 }}>Optimal 3PL Carrier</span>
+                        <span style={{ color: "var(--shopify-green)", fontWeight: 700 }}>PKR 75 saved vs standard</span>
+                      </div>
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                          <span style={{ fontSize: "0.8125rem", fontWeight: 800, color: "var(--text-primary)" }}>BlueEX Logistics</span>
+                          <span style={{ fontSize: "0.6875rem", color: "var(--text-muted)" }}>(2.1d SLA)</span>
+                        </div>
+                        <div style={{ fontSize: "0.9375rem", fontWeight: 800, color: "var(--shopify-green)", fontFamily: "var(--font-mono)" }}>
+                          PKR 198
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Interactive Trigger Button */}
+                  <button
+                    onClick={(e) => handleQuickDispatch("10482", e)}
+                    disabled={quickDispatchedId === "10482"}
+                    className="btn btn-green"
+                    style={{ width: "100%", padding: "0.75rem", fontSize: "0.875rem", gap: "0.5rem", borderRadius: "8px", fontWeight: 700 }}
+                  >
+                    {quickDispatchedId === "10482" ? "✓ Dispatched! Generated AWB #BX-90412" : "⚡ Execute Auto-Dispatch Simulation"}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Streamlined Live Operations Feed (Zero Table Clutter) */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <div style={{ fontSize: "1rem", fontWeight: 800, color: "var(--text-primary)", display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                  <span style={{ width: "8px", height: "8px", borderRadius: "50%", backgroundColor: "var(--shopify-green)" }} className="anim-pulse" />
+                  Live Operational Stream
+                </div>
+                <button
+                  onClick={() => setConsoleMode("confirmation")}
+                  style={{
+                    border: "none",
+                    background: "none",
+                    color: "var(--shopify-green)",
+                    fontWeight: 700,
+                    fontSize: "0.8125rem",
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.35rem"
+                  }}
+                >
+                  View Full Detailed Order Ledger →
+                </button>
+              </div>
+
+              {/* 3 High-Contrast Streamlined Cards */}
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "1.25rem" }}>
+                {orders.slice(0, 3).map((order) => {
+                  const isDispatched = quickDispatchedId === order.id;
+                  let pillColor = "#10B981";
+                  let statusBg = "var(--shopify-green-light)";
+                  if (order.status === "calling") {
+                    pillColor = "#0284C7";
+                    statusBg = "var(--ai-cyan-light)";
+                  } else if (order.status === "callback_scheduled") {
+                    pillColor = "#D97706";
+                    statusBg = "#FEF3C7";
+                  }
+
+                  return (
+                    <div
+                      key={order.id}
+                      className="surface-card"
+                      style={{
+                        padding: "1.25rem",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "space-between",
+                        border: isDispatched ? "1.5px solid var(--shopify-green)" : "1px solid var(--border-subtle)",
+                        transition: "all 0.2s ease"
+                      }}
+                    >
+                      <div>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "0.75rem" }}>
+                          <div>
+                            <div style={{ fontSize: "0.75rem", fontFamily: "var(--font-mono)", color: "var(--text-muted)", fontWeight: 700 }}>
+                              #{order.id}
+                            </div>
+                            <div style={{ fontSize: "1rem", fontWeight: 800, color: "var(--text-primary)" }}>
+                              {order.customer_name}
+                            </div>
+                            <div style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>
+                              {order.shipping_city} • {order.customer_phone}
+                            </div>
+                          </div>
+                          <span style={{
+                            padding: "0.25rem 0.6rem",
+                            borderRadius: "9999px",
+                            fontSize: "0.75rem",
+                            fontWeight: 700,
+                            backgroundColor: statusBg,
+                            color: pillColor
+                          }}>
+                            {isDispatched ? "✓ Dispatched" : order.status.replace("_", " ")}
+                          </span>
+                        </div>
+
+                        {/* Order Detail Strip */}
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", backgroundColor: "var(--bg-main)", padding: "0.5rem 0.75rem", borderRadius: "8px", marginBottom: "1rem" }}>
+                          <div>
+                            <div style={{ fontSize: "0.6875rem", color: "var(--text-muted)" }}>Payable COD</div>
+                            <div style={{ fontSize: "0.9375rem", fontWeight: 800, color: "var(--text-primary)" }}>
+                              {order.currency} {order.total_price.toLocaleString()}
+                            </div>
+                          </div>
+                          <div style={{ textAlign: "right" }}>
+                            <div style={{ fontSize: "0.6875rem", color: "var(--text-muted)" }}>Evidence</div>
+                            <div style={{ fontSize: "0.75rem", fontWeight: 700, color: order.intent_to_receive ? "var(--shopify-green)" : "var(--text-secondary)" }}>
+                              {order.intent_to_receive ? "✓ 3-Point Verified" : "⏳ Call Queued"}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div style={{ display: "flex", gap: "0.5rem" }}>
+                        <button
+                          onClick={(e) => handleCallCustomer(order.id, e)}
+                          className="btn btn-secondary"
+                          style={{ flex: 1, padding: "0.45rem", fontSize: "0.75rem", fontWeight: 700, justifyContent: "center" }}
+                        >
+                          📞 AI Call
+                        </button>
+                        <button
+                          onClick={(e) => handleQuickDispatch(order.id, e)}
+                          disabled={isDispatched}
+                          className="btn btn-primary"
+                          style={{ flex: 1, padding: "0.45rem", fontSize: "0.75rem", fontWeight: 700, justifyContent: "center" }}
+                        >
+                          {isDispatched ? "✓ AWB Ready" : "🚚 Auto-Dispatch"}
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* View Mode 1: Order Confirmation Queue with Real-Time Search & City Filters */}
         {consoleMode === "confirmation" && (
