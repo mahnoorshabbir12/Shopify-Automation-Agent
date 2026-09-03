@@ -127,6 +127,9 @@ Append-only working memory for this repo. Newest entries at the bottom of each s
 | 2.1 Courier Domain Models & Adapters | implemented | [`docs/MODULE_2_1.md`](MODULE_2_1.md) — PostgreSQL shipment schema, `CourierAdapter` protocol, TCS/PostEx/BlueEX adapters and registry. |
 | 2.2 Shipping LangGraph Decision Engine | implemented | [`docs/MODULE_2_2.md`](MODULE_2_2.md) — Pure LangGraph multi-courier selection, cost/SLA optimization, and exception routing. |
 | 2.3 Automated Booking & Shopify Sync | implemented | [`docs/MODULE_2_3.md`](MODULE_2_3.md) — Courier booking execution, AWB persistence, Shopify fulfillment sync, and Dispatch UI tab. |
+| 3.1 Support Models & Live Tool APIs | implemented | [`docs/MODULE_3_1.md`](MODULE_3_1.md) — Support tickets, complaints, 7-day refund guardrails, live tracking and inventory tools. |
+| 3.2 Support LangGraph Conversational Engine | implemented | [`docs/MODULE_3_2.md`](MODULE_3_2.md) — Dual-knowledge router (static policy RAG vs live tools), sentiment analysis, and escalation. |
+| 3.3 Support Helpdesk & Live Simulator | implemented | [`docs/MODULE_3_3.md`](MODULE_3_3.md) — React Support & Complaints desk tab and interactive web chat/voice customer simulator. |
 
 ---
 

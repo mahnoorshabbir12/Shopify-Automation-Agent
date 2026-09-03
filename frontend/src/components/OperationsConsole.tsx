@@ -32,6 +32,18 @@ interface ShipmentItem {
   booked_at?: string;
 }
 
+interface SupportTicketItem {
+  id: number;
+  ticket_number: string;
+  order_id: string;
+  category: string;
+  priority: string;
+  status: string;
+  summary: string;
+  resolution_notes?: string;
+  created_at?: string;
+}
+
 interface RateQuote {
   courier_code: string;
   courier_name: string;
@@ -55,15 +67,35 @@ interface StatsData {
   total_revenue_pkr: number;
 }
 
+interface ChatMessage {
+  sender: "customer" | "ai";
+  text: string;
+  intent?: string;
+  ticketNumber?: string;
+}
+
 export const OperationsConsole: React.FC = () => {
-  const [consoleMode, setConsoleMode] = useState<"confirmation" | "dispatch">("confirmation");
+  const [consoleMode, setConsoleMode] = useState<"confirmation" | "dispatch" | "support">("confirmation");
   const [activeTab, setActiveTab] = useState("all");
   const [orders, setOrders] = useState<OrderItem[]>([]);
   const [shipments, setShipments] = useState<ShipmentItem[]>([]);
+  const [tickets, setTickets] = useState<SupportTicketItem[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<OrderItem | null>(null);
   const [orderQuotes, setOrderQuotes] = useState<RateQuote[]>([]);
   const [loadingQuotes, setLoadingQuotes] = useState(false);
   const [dispatchResult, setDispatchResult] = useState<any>(null);
+
+  // Chat simulator state
+  const [chatInput, setChatInput] = useState("");
+  const [chatLoading, setChatLoading] = useState(false);
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([
+    { sender: "customer", text: "Where is my parcel for order #10482?" },
+    {
+      sender: "ai",
+      text: "Your order order-10482 has been dispatched via BlueEX Courier under tracking number BX-90412. Current status is In Transit. Latest checkpoint: IN_TRANSIT: In transit to delivery hub Lahore.",
+      intent: "WISMO_TRACKING"
+    }
+  ]);
 
   const [stats, setStats] = useState<StatsData>({
     total_orders: 142,
@@ -77,7 +109,7 @@ export const OperationsConsole: React.FC = () => {
   });
   const [loadingAction, setLoadingAction] = useState(false);
 
-  // Fetch stats, queue, and shipments
+  // Fetch stats, queue, shipments, and support tickets
   useEffect(() => {
     const fetchQueue = async () => {
       try {
@@ -98,6 +130,12 @@ export const OperationsConsole: React.FC = () => {
         if (shipRes.ok) {
           const shipData = await shipRes.json();
           setShipments(shipData);
+        }
+
+        const tickRes = await fetch("http://localhost:8000/api/v1/support/tickets");
+        if (tickRes.ok) {
+          const tickData = await tickRes.json();
+          setTickets(tickData);
         }
       } catch {
         // Fallback demo data
@@ -181,12 +219,47 @@ export const OperationsConsole: React.FC = () => {
             booked_at: "2026-09-03T09:15:00Z"
           }
         ]);
+
+        setTickets([
+          {
+            id: 1,
+            ticket_number: "TICK-44012",
+            order_id: "10482",
+            category: "complaint",
+            priority: "urgent",
+            status: "open",
+            summary: "Complaint: Damaged Item",
+            resolution_notes: "Perfume bottle leaked inside package during courier transit.",
+            created_at: "10 mins ago"
+          },
+          {
+            id: 2,
+            ticket_number: "TICK-44009",
+            order_id: "10481",
+            category: "refund",
+            priority: "high",
+            status: "in_progress",
+            summary: "Refund Request: PKR 14,500",
+            resolution_notes: "Customer reported color mismatch; return rider scheduled.",
+            created_at: "35 mins ago"
+          },
+          {
+            id: 3,
+            ticket_number: "TICK-43980",
+            order_id: "10478",
+            category: "wismo",
+            priority: "medium",
+            status: "resolved",
+            summary: "WISMO: Delivery ETA Inquiry",
+            resolution_notes: "Automated AI response provided live tracking link.",
+            created_at: "2 hours ago"
+          }
+        ]);
       }
     };
     fetchQueue();
   }, [activeTab]);
 
-  // When opening order drawer, fetch competing rates if confirmed
   const openOrderDrawer = async (order: OrderItem) => {
     setSelectedOrder(order);
     setDispatchResult(null);
@@ -200,7 +273,6 @@ export const OperationsConsole: React.FC = () => {
           const quotes = await res.json();
           setOrderQuotes(quotes);
         } else {
-          // Mock rates
           setOrderQuotes([
             { courier_code: "blueex", courier_name: "BlueEX", base_rate: 160, additional_weight_rate: 0, cod_fee: 38, total_cost: 198, estimated_days: 2, is_serviceable: true },
             { courier_code: "postex", courier_name: "PostEx", base_rate: 180, additional_weight_rate: 0, cod_fee: 45, total_cost: 225, estimated_days: 1, is_serviceable: true },
@@ -257,7 +329,6 @@ export const OperationsConsole: React.FC = () => {
       if (res.ok) {
         const result = await res.json();
         setDispatchResult(result);
-        // Refresh shipments list
         setShipments(prev => [
           {
             id: result.shipment_id || Date.now(),
@@ -274,7 +345,6 @@ export const OperationsConsole: React.FC = () => {
           ...prev
         ]);
       } else {
-        // Fallback local simulation
         const fakeAwb = preferredCourier === "tcs" ? "77810294821" : preferredCourier === "postex" ? "PX-894124" : "BX-44129";
         const fakeUrl = preferredCourier === "tcs" ? `https://www.tcsexpress.com/tracking?awb=${fakeAwb}` : `https://postex.pk/tracking?orderRefNumber=${fakeAwb}`;
         setDispatchResult({
@@ -302,6 +372,84 @@ export const OperationsConsole: React.FC = () => {
     }
   };
 
+  const handleTicketAction = async (ticketId: number, action: "resolve" | "escalate") => {
+    try {
+      await fetch(`http://localhost:8000/api/v1/support/tickets/${ticketId}/action`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action, notes: action === "resolve" ? "Resolved by operator." : "Escalated for review." })
+      });
+      setTickets(prev => prev.map(t => t.id === ticketId ? { ...t, status: action === "resolve" ? "resolved" : "escalated" } : t));
+    } catch {
+      setTickets(prev => prev.map(t => t.id === ticketId ? { ...t, status: action === "resolve" ? "resolved" : "escalated" } : t));
+    }
+  };
+
+  const sendSupportChat = async (messageText: string) => {
+    const textToSend = messageText || chatInput;
+    if (!textToSend.trim()) return;
+
+    setChatMessages(prev => [...prev, { sender: "customer", text: textToSend }]);
+    setChatInput("");
+    setChatLoading(true);
+
+    try {
+      const res = await fetch("http://localhost:8000/api/v1/support/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query: textToSend })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setChatMessages(prev => [
+          ...prev,
+          {
+            sender: "ai",
+            text: data.final_response,
+            intent: data.intent,
+            ticketNumber: data.active_ticket_number
+          }
+        ]);
+        if (data.active_ticket_number) {
+          // Add newly generated ticket to tickets list
+          setTickets(prev => [
+            {
+              id: Date.now(),
+              ticket_number: data.active_ticket_number,
+              order_id: data.order_id || "Live Chat",
+              category: data.intent.toLowerCase(),
+              priority: data.escalation_needed ? "urgent" : "medium",
+              status: "open",
+              summary: `${data.intent}: ${textToSend.slice(0, 35)}...`,
+              created_at: "Just now"
+            },
+            ...prev
+          ]);
+        }
+      } else {
+        setChatMessages(prev => [
+          ...prev,
+          {
+            sender: "ai",
+            text: "According to our store policy, we offer standard 2-4 business days delivery across Pakistan with a 7-day hassle-free return window on unworn items.",
+            intent: "POLICY_FAQ"
+          }
+        ]);
+      }
+    } catch {
+      setChatMessages(prev => [
+        ...prev,
+        {
+          sender: "ai",
+          text: "I am routing your request to the appropriate department. Your query has been logged.",
+          intent: "POLICY_FAQ"
+        }
+      ]);
+    } finally {
+      setChatLoading(false);
+    }
+  };
+
   return (
     <section id="console" style={{
       scrollMarginTop: "90px",
@@ -320,7 +468,7 @@ export const OperationsConsole: React.FC = () => {
               </div>
               <h2 className="section-title" style={{ marginBottom: "0.25rem" }}>Real-Time Operations & Queue</h2>
               <p className="section-desc">
-                Live monitoring, AI automated confirmation, and autonomous multi-courier dispatch with zero manual spreadsheets.
+                Live monitoring across Confirmation Calls, Autonomous Dispatch, and Customer Support Helpdesk.
               </p>
             </div>
 
@@ -330,12 +478,13 @@ export const OperationsConsole: React.FC = () => {
               backgroundColor: "var(--bg-main)",
               padding: "0.3rem",
               borderRadius: "10px",
-              border: "1px solid var(--border-subtle)"
+              border: "1px solid var(--border-subtle)",
+              gap: "0.25rem"
             }}>
               <button
                 onClick={() => setConsoleMode("confirmation")}
                 style={{
-                  padding: "0.5rem 1.25rem",
+                  padding: "0.5rem 1.1rem",
                   borderRadius: "8px",
                   border: "none",
                   backgroundColor: consoleMode === "confirmation" ? "#FFFFFF" : "transparent",
@@ -347,12 +496,12 @@ export const OperationsConsole: React.FC = () => {
                   transition: "all 0.2s"
                 }}
               >
-                1. Order Confirmation Queue
+                1. Confirmation Queue
               </button>
               <button
                 onClick={() => setConsoleMode("dispatch")}
                 style={{
-                  padding: "0.5rem 1.25rem",
+                  padding: "0.5rem 1.1rem",
                   borderRadius: "8px",
                   border: "none",
                   backgroundColor: consoleMode === "dispatch" ? "#FFFFFF" : "transparent",
@@ -364,11 +513,32 @@ export const OperationsConsole: React.FC = () => {
                   transition: "all 0.2s",
                   display: "flex",
                   alignItems: "center",
-                  gap: "0.4rem"
+                  gap: "0.35rem"
                 }}
               >
                 <span style={{ width: "6px", height: "6px", borderRadius: "50%", backgroundColor: "var(--shopify-green)" }} />
-                2. Autonomous Dispatch (Phase 2)
+                2. Autonomous Dispatch
+              </button>
+              <button
+                onClick={() => setConsoleMode("support")}
+                style={{
+                  padding: "0.5rem 1.1rem",
+                  borderRadius: "8px",
+                  border: "none",
+                  backgroundColor: consoleMode === "support" ? "#FFFFFF" : "transparent",
+                  color: consoleMode === "support" ? "#0284C7" : "var(--text-muted)",
+                  fontWeight: 700,
+                  fontSize: "0.8125rem",
+                  cursor: "pointer",
+                  boxShadow: consoleMode === "support" ? "var(--shadow-sm)" : "none",
+                  transition: "all 0.2s",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.35rem"
+                }}
+              >
+                <span style={{ width: "6px", height: "6px", borderRadius: "50%", backgroundColor: "#0284C7" }} />
+                3. Support & Complaints (Phase 3)
               </button>
             </div>
           </div>
@@ -410,10 +580,10 @@ export const OperationsConsole: React.FC = () => {
 
           <div className="surface-card" style={{ padding: "1.25rem" }}>
             <div style={{ fontSize: "0.75rem", color: "var(--text-muted)", fontWeight: 700, textTransform: "uppercase" }}>
-              AI Automation Rate
+              Support Tickets
             </div>
-            <div style={{ fontSize: "1.75rem", fontWeight: 800, color: "var(--shopify-green)", marginTop: "0.25rem" }}>
-              {stats.ai_automation_rate}%
+            <div style={{ fontSize: "1.75rem", fontWeight: 800, color: "#0284C7", marginTop: "0.25rem" }}>
+              {tickets.length} Active
             </div>
           </div>
 
@@ -438,7 +608,7 @@ export const OperationsConsole: React.FC = () => {
                   onClick={() => setActiveTab(tab)}
                   className={`tab-btn ${activeTab === tab ? "active" : ""}`}
                 >
-                  {tab.replace("_", " ")}
+                  {tab === "all" ? "All Orders" : tab.replace("_", " ")}
                 </button>
               ))}
             </div>
@@ -620,6 +790,227 @@ export const OperationsConsole: React.FC = () => {
                   ))}
                 </tbody>
               </table>
+            </div>
+          </div>
+        )}
+
+        {/* View Mode 3: Customer Support & Complaints Desk (Phase 3) */}
+        {consoleMode === "support" && (
+          <div style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: "1.5rem" }}>
+            {/* Left: Support Tickets & Complaints Ledger */}
+            <div className="surface-card" style={{ padding: "1.5rem" }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.25rem" }}>
+                <div>
+                  <h3 style={{ fontSize: "1.125rem", fontWeight: 800, color: "var(--text-primary)" }}>
+                    Customer Support & Complaints Queue
+                  </h3>
+                  <p style={{ fontSize: "0.8125rem", color: "var(--text-secondary)" }}>
+                    Automated tracking, 7-day refund guardrails, and grievance tickets.
+                  </p>
+                </div>
+                <span className="pill" style={{ backgroundColor: "#E0F2FE", color: "#0284C7", fontSize: "0.75rem" }}>
+                  {tickets.filter(t => t.status !== "resolved").length} Open Tickets
+                </span>
+              </div>
+
+              <div style={{ overflowX: "auto" }}>
+                <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left" }}>
+                  <thead>
+                    <tr style={{ borderBottom: "1px solid var(--border-subtle)", color: "var(--text-muted)", fontSize: "0.75rem", textTransform: "uppercase" }}>
+                      <th style={{ padding: "0.75rem 0.5rem" }}>Ticket</th>
+                      <th style={{ padding: "0.75rem 0.5rem" }}>Category</th>
+                      <th style={{ padding: "0.75rem 0.5rem" }}>Priority</th>
+                      <th style={{ padding: "0.75rem 0.5rem" }}>Summary</th>
+                      <th style={{ padding: "0.75rem 0.5rem" }}>Status</th>
+                      <th style={{ padding: "0.75rem 0.5rem", textAlign: "right" }}>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {tickets.map((t) => (
+                      <tr key={t.id} style={{ borderBottom: "1px solid var(--border-subtle)", fontSize: "0.8125rem" }}>
+                        <td style={{ padding: "0.75rem 0.5rem", fontWeight: 700, fontFamily: "var(--font-mono)" }}>
+                          #{t.ticket_number}
+                        </td>
+                        <td style={{ padding: "0.75rem 0.5rem" }}>
+                          <span style={{
+                            fontSize: "0.6875rem",
+                            fontWeight: 700,
+                            padding: "0.15rem 0.4rem",
+                            borderRadius: "4px",
+                            textTransform: "uppercase",
+                            backgroundColor: t.category === "complaint" ? "#FEE2E2" : t.category === "refund" ? "#FEF3C7" : "#E0F2FE",
+                            color: t.category === "complaint" ? "#DC2626" : t.category === "refund" ? "#D97706" : "#0284C7"
+                          }}>
+                            {t.category}
+                          </span>
+                        </td>
+                        <td style={{ padding: "0.75rem 0.5rem" }}>
+                          <span style={{
+                            fontSize: "0.6875rem",
+                            fontWeight: 700,
+                            color: t.priority === "urgent" ? "#DC2626" : t.priority === "high" ? "#D97706" : "var(--text-secondary)"
+                          }}>
+                            {t.priority.toUpperCase()}
+                          </span>
+                        </td>
+                        <td style={{ padding: "0.75rem 0.5rem" }}>
+                          <div style={{ fontWeight: 600, color: "var(--text-primary)" }}>{t.summary}</div>
+                          {t.resolution_notes && (
+                            <div style={{ fontSize: "0.6875rem", color: "var(--text-muted)" }}>{t.resolution_notes}</div>
+                          )}
+                        </td>
+                        <td style={{ padding: "0.75rem 0.5rem" }}>
+                          <span style={{
+                            fontSize: "0.6875rem",
+                            fontWeight: 700,
+                            padding: "0.15rem 0.4rem",
+                            borderRadius: "4px",
+                            textTransform: "uppercase",
+                            backgroundColor: t.status === "resolved" ? "var(--shopify-green-light)" : t.status === "escalated" ? "var(--danger-light)" : "var(--bg-main)",
+                            color: t.status === "resolved" ? "var(--shopify-green)" : t.status === "escalated" ? "var(--danger-crimson)" : "var(--text-muted)"
+                          }}>
+                            {t.status}
+                          </span>
+                        </td>
+                        <td style={{ padding: "0.75rem 0.5rem", textAlign: "right" }}>
+                          {t.status !== "resolved" ? (
+                            <button
+                              onClick={() => handleTicketAction(t.id, "resolve")}
+                              style={{
+                                fontSize: "0.6875rem",
+                                padding: "0.25rem 0.5rem",
+                                borderRadius: "4px",
+                                backgroundColor: "var(--bg-main)",
+                                border: "1px solid var(--border-subtle)",
+                                cursor: "pointer",
+                                fontWeight: 700
+                              }}
+                            >
+                              Resolve ✓
+                            </button>
+                          ) : (
+                            <span style={{ fontSize: "0.6875rem", color: "var(--text-muted)" }}>Closed</span>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Right: Interactive Customer Support Simulator */}
+            <div className="surface-card" style={{ padding: "1.5rem", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+              <div>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.75rem" }}>
+                  <div style={{ fontWeight: 800, fontSize: "1rem", color: "var(--text-primary)" }}>
+                    AI Support Agent Simulator
+                  </div>
+                  <span className="pill" style={{ backgroundColor: "var(--ai-cyan-light)", color: "var(--ai-cyan)", fontSize: "0.6875rem" }}>
+                    LangGraph State Machine
+                  </span>
+                </div>
+                <p style={{ fontSize: "0.75rem", color: "var(--text-secondary)", marginBottom: "1rem" }}>
+                  Test customer conversations live. Queries automatically route to Qdrant RAG (policies) or live tools (tracking, refunds, complaints).
+                </p>
+
+                {/* Quick-Prompt Test Chips */}
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "0.35rem", marginBottom: "1rem" }}>
+                  {[
+                    "Where is order #10482?",
+                    "What is your return policy?",
+                    "Do you have lawn suits?",
+                    "My perfume arrived broken",
+                    "I want a refund for #10481",
+                    "Transfer to human agent"
+                  ].map((chip) => (
+                    <button
+                      key={chip}
+                      onClick={() => sendSupportChat(chip)}
+                      style={{
+                        fontSize: "0.6875rem",
+                        padding: "0.25rem 0.5rem",
+                        borderRadius: "12px",
+                        backgroundColor: "var(--bg-main)",
+                        border: "1px solid var(--border-subtle)",
+                        cursor: "pointer",
+                        color: "var(--text-secondary)"
+                      }}
+                    >
+                      {chip}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Conversation Box */}
+                <div style={{
+                  height: "280px",
+                  overflowY: "auto",
+                  padding: "0.75rem",
+                  backgroundColor: "var(--bg-main)",
+                  borderRadius: "8px",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "0.75rem",
+                  fontSize: "0.8125rem",
+                  border: "1px solid var(--border-subtle)"
+                }}>
+                  {chatMessages.map((msg, idx) => (
+                    <div
+                      key={idx}
+                      style={{
+                        alignSelf: msg.sender === "customer" ? "flex-end" : "flex-start",
+                        maxWidth: "85%",
+                        padding: "0.6rem 0.8rem",
+                        borderRadius: "8px",
+                        backgroundColor: msg.sender === "customer" ? "var(--text-primary)" : "#FFFFFF",
+                        color: msg.sender === "customer" ? "#FFFFFF" : "var(--text-primary)",
+                        boxShadow: "var(--shadow-sm)"
+                      }}
+                    >
+                      {msg.sender === "ai" && msg.intent && (
+                        <div style={{ fontSize: "0.625rem", fontWeight: 800, textTransform: "uppercase", color: "#0284C7", marginBottom: "0.2rem" }}>
+                          ⚡ Intent: {msg.intent} {msg.ticketNumber && `• ${msg.ticketNumber}`}
+                        </div>
+                      )}
+                      <div>{msg.text}</div>
+                    </div>
+                  ))}
+                  {chatLoading && (
+                    <div style={{ alignSelf: "flex-start", fontSize: "0.75rem", color: "var(--text-muted)" }}>
+                      AI Agent querying LangGraph & tools...
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Chat Input */}
+              <div style={{ marginTop: "1rem", display: "flex", gap: "0.5rem" }}>
+                <input
+                  type="text"
+                  value={chatInput}
+                  onChange={(e) => setChatInput(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && sendSupportChat(chatInput)}
+                  placeholder="Ask a customer support question..."
+                  style={{
+                    flex: 1,
+                    padding: "0.55rem 0.75rem",
+                    borderRadius: "6px",
+                    border: "1px solid var(--border-medium)",
+                    fontSize: "0.8125rem",
+                    fontFamily: "var(--font-sans)",
+                    outline: "none"
+                  }}
+                />
+                <button
+                  onClick={() => sendSupportChat(chatInput)}
+                  disabled={chatLoading}
+                  className="btn btn-primary"
+                  style={{ padding: "0.55rem 1rem", fontSize: "0.8125rem" }}
+                >
+                  Send
+                </button>
+              </div>
             </div>
           </div>
         )}
