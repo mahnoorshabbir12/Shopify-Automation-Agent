@@ -12,7 +12,7 @@ Module 1.10 delivers the complete operations console and human review interface 
    - **Automation in Action Workflow**: 8-stage visual pipeline with active stage highlighting and step progression.
    - **Three Specialized AI Agents**: Detailed feature cards for Confirmation Agent, Support Agent, and Shipping Agent.
    - **Real-Time Operations Console**: Metric cards, live activity stream, filterable order table with 3-point confirmation indicators (Address, Amount, Intent), and slide-over Order Detail Drawer.
-   - **Architecture Section**: Visual system flow showing zero data-loss guarantees and sub-200ms voice tool execution.
+   - **Architecture Section**: Visual system flow with animated SVG data stream beam, traveling glowing pulse particles, sequential layer lighting wave, and interactive `▶ Simulate Data Ingest Pulse` trigger.
 
 ---
 

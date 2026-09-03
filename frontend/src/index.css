@@ -52,6 +52,11 @@
   --transition-slow: 400ms var(--ease-spring);
 }
 
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 96px;
+}
+
 * {
   margin: 0;
   padding: 0;

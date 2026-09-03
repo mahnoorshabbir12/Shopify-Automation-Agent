@@ -31,6 +31,7 @@ export const WorkflowSection: React.FC = () => {
 
   return (
     <section id="pipeline" style={{
+      scrollMarginTop: "90px",
       padding: "6rem 0",
       backgroundColor: "var(--bg-surface)",
       borderBottom: "1px solid var(--border-subtle)"

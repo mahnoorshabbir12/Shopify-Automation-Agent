@@ -3,6 +3,7 @@ import React from "react";
 export const AgentsSection: React.FC = () => {
   return (
     <section id="agents" style={{
+      scrollMarginTop: "90px",
       padding: "6rem 0",
       backgroundColor: "var(--bg-main)",
       borderBottom: "1px solid var(--border-subtle)"
