@@ -24,6 +24,17 @@ class Settings(BaseSettings):
     RETELL_AGENT_ID: str = "mock-agent-for-tests"
     PLIVO_PHONE_NUMBER: str = "+1234567890"
     TOOL_API_KEY: str = "test-tool-api-key"
+    RETELL_WEBHOOK_SECRET: str = "test-retell-webhook-secret"
+
+    # Retry Strategy Configuration
+    MAX_CONFIRMATION_ATTEMPTS: int = 3
+    RETRY_DELAY_HOURS_ATTEMPT_1: int = 2
+    RETRY_DELAY_HOURS_ATTEMPT_2: int = 24
+    RETRY_DELAY_HOURS_ATTEMPT_3: int = 48
+
+    # Qdrant Vector DB Configuration
+    QDRANT_HOST: str = "localhost"
+    QDRANT_PORT: int = 6333
 
 
     model_config = SettingsConfigDict(

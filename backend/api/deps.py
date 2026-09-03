@@ -35,3 +35,34 @@ async def verify_tool_api_key(
         )
 
     return token
+
+async def verify_retell_webhook(
+    x_retell_secret: Optional[str] = Header(default=None, alias="X-Retell-Secret"),
+    authorization: Optional[str] = Header(default=None)
+) -> str:
+    """
+    Validates incoming webhook callbacks from Retell AI.
+    Uses constant-time comparison against RETELL_WEBHOOK_SECRET.
+    """
+    token = x_retell_secret
+    if not token and authorization:
+        parts = authorization.split()
+        if len(parts) == 2 and parts[0].lower() == "bearer":
+            token = parts[1]
+
+    if not token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Missing Retell webhook secret. Provide 'X-Retell-Secret' or 'Authorization: Bearer <secret>'.",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    expected_secret = settings.RETELL_WEBHOOK_SECRET
+    if not secrets.compare_digest(token, expected_secret):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid Retell webhook secret.",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    return token

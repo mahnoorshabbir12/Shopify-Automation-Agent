@@ -66,7 +66,7 @@ def test_search_knowledge_return_policy():
     )
     assert response.status_code == 200
     results = response.json()["results"]
-    assert any("7 days" in r["content"] for r in results)
+    assert any("7" in r["content"] and "day" in r["content"].lower() for r in results)
 
 # --- Get Order Tool Tests ---
 

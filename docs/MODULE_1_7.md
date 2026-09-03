@@ -41,6 +41,19 @@ All tool endpoints are protected by `verify_tool_api_key` using constant-time co
 
 ---
 
+## Transferable Real-World Use Cases
+
+### Where to Implement This Approach
+1. **AI Voice Banking & Funds Transfer:** Verifying phone banking transactions where the voice agent must explicitly confirm the recipient account, transfer amount, and customer authorization before invoking the core banking ledger API.
+2. **Medical & Telehealth Prescription Dispatch:** Confirming patient delivery address, medication dosage confirmation, and explicit patient consent before dispatching sensitive pharmaceuticals.
+3. **High-Value B2B Freight Logistics:** Voice verification of warehouse loading bay availability, consignment weight limits, and driver pickup appointments.
+
+### When NOT to Use This Approach
+- Low-stakes conversational chatbots (e.g. casual small-talk bots) where strict structured attribute verification is unnecessary.
+- Systems requiring public unauthenticated access where static header-based keys cannot be kept confidential.
+
+---
+
 ## Architecture Flow
 
 ```text

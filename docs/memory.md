@@ -110,20 +110,20 @@ Append-only working memory for this repo. Newest entries at the bottom of each s
 
 ## Module tracker
 
-| Module | Status | Notes |
+| Module | Status | Documentation & Notes |
 |---|---|---|
 | Docs: architecture / stack / memory / PRD v1.1 / prospects | done | 2026-08-31 |
-| 1.1 FastAPI skeleton | done | Monorepo structure, Vite frontend |
-| 1.2 PostgreSQL order models | done | Alembic migrations created and applied |
-| 1.3 Shopify webhook ingest | done | HMAC validation and Idempotent DB upserts |
-| 1.4 Shopify Admin read | done | Implemented async client with httpx |
-| 1.5 Confirmation LangGraph + workflow_tasks | implemented | Durable task model, state routing, idempotent scheduling, and automated tests added. Apply Alembic revision `4a4b2e4bbf33` when the local PostgreSQL container is running; provider integration remains in 1.6/1.8. |
-| 1.6 Retell + Plivo outbound | implemented | Custom async loop `worker.py` and `RetellClient` created. |
-| 1.7 Confirmation tool APIs incl. search_knowledge | implemented | Secure `/tools/*` endpoints, 3-point COD confirmation, callback scheduling, human escalation, and KnowledgeService implemented with 13 automated tests. |
-| 1.8 Retry on no-answer | not started | |
-| 1.9 Our LangChain RAG | not started | |
-| 1.10 React confirmation queue | not started | |
-| 1.11 LangSmith | not started | |
+| 1.1 FastAPI skeleton | done | [`docs/MODULE_1_1.md`](MODULE_1_1.md) — Polyglot monorepo structure, Pydantic BaseSettings, Vite React frontend. |
+| 1.2 PostgreSQL order models | done | [`docs/MODULE_1_2.md`](MODULE_1_2.md) — SQLAlchemy 2.0 Async ORM, 3-point COD schema, Alembic migrations. |
+| 1.3 Shopify webhook ingest | done | [`docs/MODULE_1_3.md`](MODULE_1_3.md) — HMAC-SHA256 signature verification and idempotent PostgreSQL upserts. |
+| 1.4 Shopify Admin read | done | [`docs/MODULE_1_4.md`](MODULE_1_4.md) — Async GraphQL client with Client Credentials token exchange. |
+| 1.5 Confirmation LangGraph + workflow_tasks | implemented | [`docs/MODULE_1_5.md`](MODULE_1_5.md) — Pure LangGraph state graph, dual-write elimination, `FOR UPDATE SKIP LOCKED`. |
+| 1.6 Retell + Plivo outbound | implemented | [`docs/MODULE_1_6.md`](MODULE_1_6.md) — Async worker loop with lightweight HTTPX client for outbound telephony. |
+| 1.7 Confirmation tool APIs incl. search_knowledge | implemented | [`docs/MODULE_1_7.md`](MODULE_1_7.md) — Constant-time auth `/tools/*`, 3-point COD confirmation, callbacks, human escalation. |
+| 1.8 Retry on no-answer | implemented | [`docs/MODULE_1_8.md`](MODULE_1_8.md) — Tiered exponential backoff (2h/24h/48h), idempotent call-ended webhook, `UNREACHABLE` handling. |
+| 1.9 Our LangChain RAG | implemented | [`docs/MODULE_1_9.md`](MODULE_1_9.md) — Qdrant vector database (Docker + in-memory fallback), dense semantic embeddings, policy docs. |
+| 1.10 React confirmation queue | implemented | [`docs/MODULE_1_10.md`](MODULE_1_10.md) — Sleek light-mode SaaS UI, 3D interactive pipeline, live activity feed, audit drawer. |
+| 1.11 LangSmith | not started | Tracing, observability, and evaluation. |
 
 ---
 
