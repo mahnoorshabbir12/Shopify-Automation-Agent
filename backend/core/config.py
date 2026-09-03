@@ -18,6 +18,11 @@ class Settings(BaseSettings):
     SHOPIFY_STORE_URL: str
     SHOPIFY_CLIENT_ID: str
     SHOPIFY_CLIENT_SECRET: str
+    
+    # Retell AI Configuration
+    RETELL_API_KEY: str = "mock-key-for-tests"
+    RETELL_AGENT_ID: str = "mock-agent-for-tests"
+    PLIVO_PHONE_NUMBER: str = "+1234567890"
 
 
     model_config = SettingsConfigDict(
