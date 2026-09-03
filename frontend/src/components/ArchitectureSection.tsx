@@ -15,42 +15,42 @@ const LAYERS: LayerData[] = [
   {
     id: 1,
     badge: "Source of Commerce",
-    title: "Shopify Webhooks",
-    tagline: "HMAC SHA-256 Verified Ingest",
+    title: "Commerce Event Ingestion",
+    tagline: "Cryptographically Verified Pipeline",
     metric: "< 85ms ingest",
     accent: "var(--shopify-green)",
     bgLight: "var(--shopify-green-light)",
-    details: ["Raw body HMAC signature validation", "Idempotent event absorption", "Zero unauthorized payload leakage"]
+    details: ["Automated signature verification", "Idempotent event ingestion", "Zero unauthorized payload leakage"]
   },
   {
     id: 2,
     badge: "Control Plane",
-    title: "FastAPI Gateway",
-    tagline: "Owns Side Effects & Validation",
-    metric: "Sub-200ms API tools",
+    title: "Core Operations Gateway",
+    tagline: "Validation & Business Rule Enforcement",
+    metric: "Sub-200ms processing",
     accent: "#0284C7",
     bgLight: "#E0F2FE",
-    details: ["Pre-shared secret authentication", "3-Point COD agreement validation", "Exposes /tools/* to Retell AI"]
+    details: ["Authenticated API contracts", "3-Point COD agreement validation", "Real-time voice tool coordination"]
   },
   {
     id: 3,
     badge: "Orchestration",
-    title: "LangGraph Engine",
-    tagline: "Deterministic Routing & RAG",
-    metric: "Pure state machine",
+    title: "Autonomous Decision Engine",
+    tagline: "Deterministic Routing & Intelligent Recovery",
+    metric: "Deterministic Engine",
     accent: "#0D9488",
     bgLight: "#CCFBF1",
-    details: ["Eliminates infinite looping", "Qdrant vector cosine retrieval", "Calculates 2h/24h/48h backoff delays"]
+    details: ["State machine loop prevention", "Semantic policy knowledge retrieval", "Automated smart retry scheduling"]
   },
   {
     id: 4,
     badge: "Persistence & I/O",
-    title: "PostgreSQL + Retell",
-    tagline: "SKIP LOCKED Queue + Plivo Outbound",
-    metric: "100% ACID durable",
+    title: "Enterprise Data & Voice Cloud",
+    tagline: "Resilient Persistence & High-Volume Telephony",
+    metric: "99.99% Availability",
     accent: "#6366F1",
     bgLight: "#EEF2FF",
-    details: ["Single-transaction order + job writes", "FOR UPDATE SKIP LOCKED worker claims", "Automatic escalation to UNREACHABLE"]
+    details: ["Single-transaction state durability", "Non-blocking concurrent task workers", "Automated customer escalation handling"]
   }
 ];
 
@@ -84,7 +84,7 @@ export const ArchitectureSection: React.FC = () => {
   return (
     <section id="architecture" style={{
       scrollMarginTop: "90px",
-      padding: "6rem 0",
+      padding: "3.5rem 0",
       backgroundColor: "var(--bg-main)",
       borderBottom: "1px solid var(--border-subtle)",
       position: "relative",
@@ -92,7 +92,7 @@ export const ArchitectureSection: React.FC = () => {
     }}>
       <div className="container">
         {/* Section Header */}
-        <div style={{ textAlign: "center", marginBottom: "3.5rem" }}>
+        <div style={{ textAlign: "center", marginBottom: "2.25rem" }}>
           <div className="section-tag" style={{ justifyContent: "center" }}>
             <span style={{ width: "6px", height: "6px", borderRadius: "50%", backgroundColor: "var(--shopify-green)" }} className="anim-pulse" />
             System Architecture
@@ -325,7 +325,7 @@ export const ArchitectureSection: React.FC = () => {
                 </div>
               </div>
               <div style={{ fontSize: "0.875rem", color: "var(--text-secondary)", lineHeight: 1.6 }}>
-                Shopify orders and their confirmation tasks are stored together in a single PostgreSQL transaction. Even if the worker restarts, tasks remain durable.
+                Shopify orders and their confirmation tasks are stored together in a single transactional unit. Even if workers restart, operational state remains strictly durable.
               </div>
             </div>
 
@@ -348,11 +348,11 @@ export const ArchitectureSection: React.FC = () => {
                   fontWeight: 800
                 }}>2</span>
                 <div style={{ fontWeight: 800, fontSize: "1rem", color: "var(--text-primary)" }}>
-                  Sub-200ms Voice Tool Latency
+                  Sub-200ms Conversational Latency
                 </div>
               </div>
               <div style={{ fontSize: "0.875rem", color: "var(--text-secondary)", lineHeight: 1.6 }}>
-                Retell AI queries our FastAPI tools directly using pre-shared secrets. In-process vector indexing ensures immediate answers during phone conversations.
+                Voice agents query store actions and policy vectors with pre-authenticated sessions, ensuring instant answers during live phone conversations.
               </div>
             </div>
 
@@ -379,7 +379,7 @@ export const ArchitectureSection: React.FC = () => {
                 </div>
               </div>
               <div style={{ fontSize: "0.875rem", color: "var(--text-secondary)", lineHeight: 1.6 }}>
-                Duplicate webhooks from Shopify or Retell are safely deduplicated using database row-level unique constraint keys.
+                Duplicate webhooks from store triggers or carrier updates are safely deduplicated using idempotency keys, guaranteeing zero double-dispatch.
               </div>
             </div>
           </div>

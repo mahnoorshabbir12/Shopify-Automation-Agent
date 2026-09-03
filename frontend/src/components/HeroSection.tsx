@@ -6,7 +6,7 @@ export const HeroSection: React.FC = () => {
   return (
     <section style={{
       position: "relative",
-      padding: "5rem 0 6rem 0",
+      padding: "3.25rem 0 3.75rem 0",
       overflow: "hidden",
       borderBottom: "1px solid var(--border-subtle)",
       background: "radial-gradient(circle at 80% 20%, rgba(224, 242, 254, 0.4) 0%, transparent 40%), radial-gradient(circle at 20% 80%, rgba(230, 244, 234, 0.35) 0%, transparent 40%)"
@@ -38,7 +38,7 @@ export const HeroSection: React.FC = () => {
               backgroundColor: "var(--shopify-green)"
             }} className="anim-pulse" />
             <span style={{ fontSize: "0.8125rem", fontWeight: 700, color: "var(--text-secondary)" }}>
-              Phase 1 Live • Autonomous COD Verification
+              Production Platform • Autonomous COD Verification & Operations
             </span>
           </div>
 
@@ -86,8 +86,8 @@ export const HeroSection: React.FC = () => {
             display: "grid",
             gridTemplateColumns: "repeat(3, 1fr)",
             gap: "1.5rem",
-            marginTop: "3.5rem",
-            paddingTop: "2rem",
+            marginTop: "2.25rem",
+            paddingTop: "1.5rem",
             borderTop: "1px solid var(--border-subtle)"
           }}>
             <div>

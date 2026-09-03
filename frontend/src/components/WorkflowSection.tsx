@@ -10,8 +10,8 @@ interface WorkflowStage {
 
 const STAGES: WorkflowStage[] = [
   { id: 1, label: "NEW ORDER", subtext: "Idempotent Webhook Received", actor: "Shopify", iconType: "order" },
-  { id: 2, label: "Confirmation Agent", subtext: "LangGraph State Routing", actor: "AI Agent", iconType: "agent" },
-  { id: 3, label: "Customer Call", subtext: "Retell AI Voice Turn", actor: "Customer", iconType: "phone" },
+  { id: 2, label: "Confirmation Agent", subtext: "Intelligent State Routing", actor: "AI Agent", iconType: "agent" },
+  { id: 3, label: "Customer Call", subtext: "Conversational Voice Turn", actor: "Customer", iconType: "phone" },
   { id: 4, label: "CONFIRMED", subtext: "Address + Amount + Intent", actor: "AI Agent", iconType: "check" },
   { id: 5, label: "Shipping Agent", subtext: "Carrier Rules Engine", actor: "AI Agent", iconType: "truck" },
   { id: 6, label: "Courier Selected", subtext: "TCS / PostEx / BlueEX", actor: "Logistics", iconType: "routing" },
@@ -32,13 +32,13 @@ export const WorkflowSection: React.FC = () => {
   return (
     <section id="pipeline" style={{
       scrollMarginTop: "90px",
-      padding: "6rem 0",
+      padding: "3.5rem 0",
       backgroundColor: "var(--bg-surface)",
       borderBottom: "1px solid var(--border-subtle)"
     }}>
       <div className="container">
         {/* Section Header */}
-        <div style={{ textAlign: "center", marginBottom: "4rem" }}>
+        <div style={{ textAlign: "center", marginBottom: "2rem" }}>
           <div className="section-tag" style={{ justifyContent: "center" }}>
             <span style={{ width: "6px", height: "6px", borderRadius: "50%", backgroundColor: "var(--shopify-green)" }} />
             Autonomous Pipeline
